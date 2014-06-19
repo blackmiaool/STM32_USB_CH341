@@ -43,8 +43,50 @@ static void DataStageOut(void);
 static void DataStageIn(void);
 static void NoData_Setup0(void);
 static void Data_Setup0(void);
+u8 vender_request;
 /* Private functions ---------------------------------------------------------*/
 
+
+u8 *Vender_Handle_CH341(u16 Length)
+{
+    static u8 buf1[2]={0x30,0};
+    switch(vender_request)
+    {
+    case 0x5f:
+        if (Length == 0)
+        {
+            pInformation->Ctrl_Info.Usb_wLength=2;
+            return 0;
+        }
+        else
+        {
+            return buf1;
+        }
+        break;
+        
+    }
+    return 0;
+//u8 *Standard_GetDescriptorData(u16 Length, ONE_DESCRIPTOR *pDesc)
+//{
+//  u32  wOffset;
+//    
+//  wOffset = pInformation->Ctrl_Info.Usb_wOffset;
+//  if (Length == 0)
+//  {
+//    pInformation->Ctrl_Info.Usb_wLength = pDesc->Descriptor_Size - wOffset;
+//    return 0;
+//  }
+
+//  return pDesc->Descriptor + wOffset;
+//}
+//   if Length is 0,
+//    CopyData() returns the available data length,
+//     if Length is not 0,
+//    CopyData() returns a pointer to indicate the data location
+//   Usb_wLength is the data remain to be sent,
+//   Usb_wOffset is the Offset of original data
+  
+}
 /*******************************************************************************
 * Function Name  : Standard_GetConfiguration.
 * Description    : Return the current configuration variable address.
@@ -76,12 +118,12 @@ u8 *Standard_GetConfiguration(u16 Length)
 *******************************************************************************/
 RESULT Standard_SetConfiguration(void)
 {
-
   if ((pInformation->USBwValue0 <=
       Device_Table.Total_Configuration) && (pInformation->USBwValue1 == 0)
       && (pInformation->USBwIndex == 0)) /*call Back usb spec 2.0*/
   {
     pInformation->Current_Configuration = pInformation->USBwValue0;
+     printf("setConfiguration%d\r\n",pInformation->Current_Configuration);
     pUser_Standard_Requests->User_SetConfiguration();
     return USB_SUCCESS;
   }
@@ -233,6 +275,7 @@ u8 *Standard_GetStatus(u16 Length)
 * Return         : - Return USB_SUCCESS, if the request is performed.
 *                  - Return USB_UNSUPPORT, if the request is invalid.
 *******************************************************************************/
+
 RESULT Standard_ClearFeature(void)
 {
   u32     Type_Rec = Type_Recipient;
@@ -405,7 +448,7 @@ RESULT Standard_SetDeviceFeature(void)
 u8 *Standard_GetDescriptorData(u16 Length, ONE_DESCRIPTOR *pDesc)
 {
   u32  wOffset;
-
+    
   wOffset = pInformation->Ctrl_Info.Usb_wOffset;
   if (Length == 0)
   {
@@ -441,11 +484,13 @@ void DataStageOut(void)
       Length = save_rLength;
     }
 
+    
     Buffer = (*pEPinfo->CopyData)(Length);
     pEPinfo->Usb_rLength -= Length;
     pEPinfo->Usb_rOffset += Length;
 
     PMAToUserBufferCopy(Buffer, GetEPRxAddr(ENDP0), Length);
+
   }
 
   if (pEPinfo->Usb_rLength != 0)
@@ -471,6 +516,8 @@ void DataStageOut(void)
       USB_StatusIn();
     }
   }
+  
+  
 }
 
 /*******************************************************************************
@@ -765,6 +812,13 @@ void Data_Setup0(void)
     }
 
   }
+  else//CH341 specific
+  {
+    u8 wValue1 = pInformation->USBwValue1;
+    CopyRoutine=Vender_Handle_CH341;
+    vender_request=Request_No;
+    printf("%d",Request_No);
+  }
   
   if (CopyRoutine)
   {
@@ -868,10 +922,12 @@ u8 Setup0_Process(void)
   if (pInformation->USBwLength == 0)
   {
     /* Setup with no data stage */
+    printf("NoData_Setup0\r\n");
     NoData_Setup0();
   }
   else
   {
+      printf("Data_Setup0\r\n");
     /* Setup with data stage */
     Data_Setup0();
   }
@@ -914,7 +970,6 @@ u8 In0_Process(void)
   }
 
   pInformation->ControlState = ControlState;
-
   return Post0_Process();
 }
 
@@ -927,6 +982,7 @@ u8 In0_Process(void)
 *******************************************************************************/
 u8 Out0_Process(void)
 {
+    
   u32 ControlState = pInformation->ControlState;
 
   if ((ControlState == OUT_DATA) || (ControlState == LAST_OUT_DATA))
@@ -934,9 +990,9 @@ u8 Out0_Process(void)
     DataStageOut();
     ControlState = pInformation->ControlState; /* may be changed outside the function */
   }
-
   else if (ControlState == WAIT_STATUS_OUT)
   {
+      printf("        out0\r\n");
     (*pProperty->Process_Status_OUT)();
     ControlState = STALLED;
   }

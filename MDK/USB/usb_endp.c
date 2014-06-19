@@ -39,9 +39,9 @@ u32 count_in = 0;
 *******************************************************************************/
 void EP3_OUT_Callback(void)
 {
-  count_out = GetEPRxCount(ENDP3);
-  PMAToUserBufferCopy(buffer_out, ENDP3_RXADDR, count_out);
-  SetEPRxValid(ENDP3);
+//  count_out = GetEPRxCount(ENDP3);
+//  PMAToUserBufferCopy(buffer_out, ENDP3_RXADDR, count_out);
+//  SetEPRxValid(ENDP3);
 }
 
 /*******************************************************************************

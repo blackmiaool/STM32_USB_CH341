@@ -16,6 +16,8 @@ int main(void)
 	delay_init(72);		//—” ±≥ı ºªØ
 	uart_init(72,115200);
 	JTAG_Set(1);
+    
+    delay_ms(100);
     Set_USBClock();
 	USB_Interrupts_Config();	
 	USB_Init();	
@@ -35,7 +37,7 @@ int main(void)
         buffer_in[8] = buffer_out[8];
         buffer_in[9] = buffer_out[9];
         count_in=3;
-        USART_To_USB_Send_Data();	
+       // USART_To_USB_Send_Data();	
         delay_ms(1000);
 	}
 }

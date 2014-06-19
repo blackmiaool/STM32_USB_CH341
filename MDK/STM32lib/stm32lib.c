@@ -215,28 +215,28 @@ void mprintf(char *shuru,...)
 
                     break;
                 }
-            case 'h':
-            {
-                char  jishu=0;
-                char xulie[20];
-                int shuchu=*((int *)((&shuru)+(canshujishu++)));
-				if(shuchu==0)
-					pc('0');
-                for(jishu=0;jishu<20&&shuchu!=0;jishu++)
+                case 'h':
                 {
-                    xulie[jishu]=shuchu%16;
-                    shuchu/=16;
-                }
-                for(;jishu>0;jishu--)
-                {
-                    if(xulie[jishu-1]<10)
-                     pc(xulie[jishu-1]+48);
-                    else
-                        pc(xulie[jishu-1]-10+'a');
-                }
+                    char  jishu=0;
+                    char xulie[20];
+                    int shuchu=*((int *)((&shuru)+(canshujishu++)));
+                    if(shuchu==0)
+                        pc('0');
+                    for(jishu=0;jishu<20&&shuchu!=0;jishu++)
+                    {
+                        xulie[jishu]=shuchu%16;
+                        shuchu/=16;
+                    }
+                    for(;jishu>0;jishu--)
+                    {
+                        if(xulie[jishu-1]<10)
+                         pc(xulie[jishu-1]+48);
+                        else
+                            pc(xulie[jishu-1]-10+'a');
+                    }
 
-                break;
-            }
+                    break;
+                }
                 case 'c':
                 {
                     char shuchu=*((char *)((&shuru)+(canshujishu++)));

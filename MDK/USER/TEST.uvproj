@@ -218,7 +218,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>3</RoSelD>
@@ -413,6 +413,11 @@
               <FileType>1</FileType>
               <FilePath>.\test.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32lib\stm32lib.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -433,6 +438,11 @@
               <FileType>1</FileType>
               <FilePath>..\SYSTEM\usart\usart.c</FilePath>
             </File>
+            <File>
+              <FileName>STM32F10xR.LIB</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\SYSTEM\STM32F10xR.LIB</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -448,11 +458,6 @@
         <Group>
           <GroupName>USB</GroupName>
           <Files>
-            <File>
-              <FileName>hw_config.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\hw_config.c</FilePath>
-            </File>
             <File>
               <FileName>usb_core.c</FileName>
               <FileType>1</FileType>
@@ -502,6 +507,11 @@
               <FileName>usb_regs.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USB\usb_regs.c</FilePath>
+            </File>
+            <File>
+              <FileName>USB_CH341.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USB\USB_CH341.c</FilePath>
             </File>
           </Files>
         </Group>

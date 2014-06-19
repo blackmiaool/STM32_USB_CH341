@@ -261,7 +261,7 @@ void Virtual_Com_Port_Reset(void)
 
   /* Initialize Endpoint 1 */
   SetEPType(ENDP1, EP_BULK);
-  SetEPTxAddr(ENDP1, ENDP1_TXADDR);
+  SetEPTxAddr(ENDP2, ENDP2_TXADDR);
   SetEPTxStatus(ENDP1, EP_TX_NAK);
   SetEPRxStatus(ENDP1, EP_RX_DIS);
 
@@ -272,11 +272,11 @@ void Virtual_Com_Port_Reset(void)
   SetEPTxStatus(ENDP2, EP_TX_NAK);
 
   /* Initialize Endpoint 3 */
-  SetEPType(ENDP3, EP_BULK);
-  SetEPRxAddr(ENDP3, ENDP3_RXADDR);
-  SetEPRxCount(ENDP3, VIRTUAL_COM_PORT_DATA_SIZE);
-  SetEPRxStatus(ENDP3, EP_RX_VALID);
-  SetEPTxStatus(ENDP3, EP_TX_DIS);
+//  SetEPType(ENDP3, EP_BULK);
+//  SetEPRxAddr(ENDP3, ENDP3_RXADDR);
+//  SetEPRxCount(ENDP3, VIRTUAL_COM_PORT_DATA_SIZE);
+//  SetEPRxStatus(ENDP3, EP_RX_VALID);
+//  SetEPTxStatus(ENDP3, EP_TX_DIS);
 
   /* Set this device to response on default address */
   SetDeviceAddress(0);
@@ -294,7 +294,6 @@ void Virtual_Com_Port_Reset(void)
 void Virtual_Com_Port_SetConfiguration(void)
 {
   DEVICE_INFO *pInfo = &Device_Info;
-
   if (pInfo->Current_Configuration != 0)
   {
     /* Device configured */
@@ -414,6 +413,7 @@ RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
 *******************************************************************************/
 u8 *Virtual_Com_Port_GetDeviceDescriptor(u16 Length)
 {
+    printf("  GetDeviceDescriptor\r\n");
   return Standard_GetDescriptorData(Length, &Device_Descriptor);
 }
 
@@ -426,6 +426,7 @@ u8 *Virtual_Com_Port_GetDeviceDescriptor(u16 Length)
 *******************************************************************************/
 u8 *Virtual_Com_Port_GetConfigDescriptor(u16 Length)
 {
+    printf("  GetConfigDescriptor\r\n");
   return Standard_GetDescriptorData(Length, &Config_Descriptor);
 }
 
@@ -438,6 +439,7 @@ u8 *Virtual_Com_Port_GetConfigDescriptor(u16 Length)
 *******************************************************************************/
 u8 *Virtual_Com_Port_GetStringDescriptor(u16 Length)
 {
+    
   u8 wValue0 = pInformation->USBwValue0;
   if (wValue0 > 4)
   {

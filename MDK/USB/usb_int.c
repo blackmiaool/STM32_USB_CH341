@@ -63,15 +63,12 @@ void CTR_LP(void)
 
       /* DIR bit = origin of the interrupt */
 
-      if ((wIstr & ISTR_DIR) == 0)
+      if ((wIstr & ISTR_DIR) == 0)//IN
       {
-        /* DIR = 0 */
-
         /* DIR = 0      => IN  int */
         /* DIR = 0 implies that (EP_CTR_TX = 1) always  */
-
-
         _ClearEP_CTR_TX(ENDP0);
+        
         In0_Process();
 
            /* before terminate set Tx & Rx status */
@@ -79,8 +76,9 @@ void CTR_LP(void)
           _SetEPTxStatus(ENDP0, SaveTState);
           return;
       }
-      else
+      else//
       {
+          
         /* DIR = 1 */
 
         /* DIR = 1 & CTR_RX       => SETUP or OUT int */

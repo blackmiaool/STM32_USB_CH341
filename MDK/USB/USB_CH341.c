@@ -25,7 +25,7 @@ void USB_LP_CAN_RX0_IRQHandler(void)
 }
 void USART_To_USB_Send_Data(void)
 {
-  UserToPMABufferCopy(buffer_in, ENDP1_TXADDR, count_in);
+  UserToPMABufferCopy(buffer_in, ENDP2_TXADDR, count_in);
   SetEPTxCount(ENDP1, count_in);
   SetEPTxValid(ENDP1);
 }
