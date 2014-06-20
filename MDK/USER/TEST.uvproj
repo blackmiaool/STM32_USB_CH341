@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LCD;..\STM32lib;..\USB</IncludePath>
+              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USB</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -413,11 +413,6 @@
               <FileType>1</FileType>
               <FilePath>.\test.c</FilePath>
             </File>
-            <File>
-              <FileName>stm32lib.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\STM32lib\stm32lib.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -447,13 +442,6 @@
         </Group>
         <Group>
           <GroupName>HARDWARE</GroupName>
-          <Files>
-            <File>
-              <FileName>ILI93xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LCD\ILI93xx.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>USB</GroupName>

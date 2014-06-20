@@ -39,7 +39,8 @@ void USB_send(u8 *buf,u8 lenth)
   UserToPMABufferCopy(buf, ENDP2_TXADDR, lenth);
   SetEPTxCount(ENDP2, lenth);
   SetEPTxValid(ENDP2);
-  //while(GetEPTxStatus(2)!=32);
+  while(GetEPTxStatus(2)!=32);
+  //delay_us(400);
 }
 void USB_receive(const u8 *buf,u8 lenth)
 {
