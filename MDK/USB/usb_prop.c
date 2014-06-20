@@ -346,6 +346,39 @@ void Virtual_Com_Port_Status_Out(void)
 * Output         : None.
 * Return         : USB_UNSUPPORT or USB_SUCCESS.
 *******************************************************************************/
+static u8 vender_request;
+
+u8 *Vender_Handle_CH341(u16 Length)
+{
+    u16 wValue = pInformation->USBwValues.w;
+    u16 wIndex = pInformation->USBwIndexs.w;
+    static u8 buf1[2]={0x30,0};
+    static u8 buf2[2]={0xc3,0};
+    static u8 buf3[2]={0Xff,0Xee};
+    change_byte(wValue);
+    change_byte(wIndex);
+    mprintf("D-%h-",vender_request);
+    mprintf("wValue=%h\r\n",wValue);
+    if (Length == 0 && (vender_request==0x5f||vender_request==0x95))
+    {
+        pInformation->Ctrl_Info.Usb_wLength=2;
+        return 0;
+    }
+    switch(vender_request)
+    {
+    case 0x5f:
+            return buf1;
+        break;
+    case 0x95:
+            if(wValue==0x2518)
+                return buf2;
+            else if(wValue==0x0706)
+                return (u8 *)&ch341_state;
+        break;
+        
+    }
+    return 0;
+}
 RESULT Virtual_Com_Port_Data_Setup(u8 RequestNo)
 {
   u8    *(*CopyRoutine)(u16);
@@ -367,7 +400,11 @@ RESULT Virtual_Com_Port_Data_Setup(u8 RequestNo)
     }
     Request = SET_LINE_CODING;
   }
-
+  else
+  {
+    vender_request=RequestNo;
+    CopyRoutine = Vender_Handle_CH341; 
+  }
   if (CopyRoutine == NULL)
   {
     return USB_UNSUPPORT;
@@ -386,9 +423,16 @@ RESULT Virtual_Com_Port_Data_Setup(u8 RequestNo)
 * Output         : None.
 * Return         : USB_UNSUPPORT or USB_SUCCESS.
 *******************************************************************************/
+
+//#define CH341_REQ_WRITE_REG    0x9A
+//#define CH341_REQ_READ_REG     0x95
+//#define CH341_REG_BREAK1       0x05
+//#define CH341_REG_BREAK2       0x18
+//#define CH341_NBREAK_BITS_REG1 0x01
+//#define CH341_NBREAK_BITS_REG2 0x40
+#define CH341_BAUDBASE_FACTOR 1532620800 
 RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
 {
-
   if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
   {
     if (RequestNo == SET_COMM_FEATURE)
@@ -399,6 +443,48 @@ RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
     {
       return USB_SUCCESS;
     }
+  }
+  else//CH341 specific
+  {
+    u16 wValue = pInformation->USBwValues.w;
+    u16 wIndex = pInformation->USBwIndexs.w;
+    static u32 baud_factor;
+    static u8 divisor;
+    u32 max=1532620800L;
+    mprintf("n-%h-",RequestNo);
+    mprintf("wValue=%h\r\n",wValue);
+    change_byte(wValue);
+    change_byte(wIndex);
+    switch(RequestNo)
+    {
+    case 0XA1:
+        break;
+    case CH341_REQ_WRITE_REG:
+        switch(wValue)
+        {
+        case 0x1312:
+            
+            baud_factor&=0x00ff;
+            baud_factor|=(wIndex&0xff00);
+            divisor=wIndex&0x03;
+            ch341_baud=1532620800L/(((~baud_factor)&0xffff)<<((3-divisor)*3));
+            printf("      baud=%d\r\n",ch341_baud);
+            break; 
+        case 0x0f2c:
+            baud_factor&=0xff00;
+            baud_factor|=wIndex;
+            ch341_baud=1532620800L/(((~baud_factor)&0xffff)<<((3-divisor)*3));
+            printf("      baud=%d\r\n",ch341_baud);
+            break;
+        }  
+        mprintf("write_reg:%h=%h\r\n",wValue,wIndex);
+        break; 
+    case 0xA4: 
+        ch341_state=0xee9f;
+        break;
+        
+    }
+    return USB_SUCCESS;           
   }
 
   return USB_UNSUPPORT;

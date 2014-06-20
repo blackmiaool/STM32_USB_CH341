@@ -16,7 +16,7 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __usb_prop_H
 #define __usb_prop_H
-
+#include "usb_ch341.h"
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 typedef struct

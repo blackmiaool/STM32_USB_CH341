@@ -10,6 +10,8 @@
 #include "usb_ch341.h"
 #include "stm32lib.h"
 USART_InitTypeDef USART_InitStructure;
+u16 ch341_baud;
+u32 ch341_state=0xeeff;
 u8 buffer_in[VIRTUAL_COM_PORT_DATA_SIZE];
 extern  u32 count_in;
 void Set_USBClock(void)

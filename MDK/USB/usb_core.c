@@ -43,50 +43,8 @@ static void DataStageOut(void);
 static void DataStageIn(void);
 static void NoData_Setup0(void);
 static void Data_Setup0(void);
-u8 vender_request;
 /* Private functions ---------------------------------------------------------*/
 
-
-u8 *Vender_Handle_CH341(u16 Length)
-{
-    static u8 buf1[2]={0x30,0};
-    switch(vender_request)
-    {
-    case 0x5f:
-        if (Length == 0)
-        {
-            pInformation->Ctrl_Info.Usb_wLength=2;
-            return 0;
-        }
-        else
-        {
-            return buf1;
-        }
-        break;
-        
-    }
-    return 0;
-//u8 *Standard_GetDescriptorData(u16 Length, ONE_DESCRIPTOR *pDesc)
-//{
-//  u32  wOffset;
-//    
-//  wOffset = pInformation->Ctrl_Info.Usb_wOffset;
-//  if (Length == 0)
-//  {
-//    pInformation->Ctrl_Info.Usb_wLength = pDesc->Descriptor_Size - wOffset;
-//    return 0;
-//  }
-
-//  return pDesc->Descriptor + wOffset;
-//}
-//   if Length is 0,
-//    CopyData() returns the available data length,
-//     if Length is not 0,
-//    CopyData() returns a pointer to indicate the data location
-//   Usb_wLength is the data remain to be sent,
-//   Usb_wOffset is the Offset of original data
-  
-}
 /*******************************************************************************
 * Function Name  : Standard_GetConfiguration.
 * Description    : Return the current configuration variable address.
@@ -812,14 +770,6 @@ void Data_Setup0(void)
     }
 
   }
-  else//CH341 specific
-  {
-    u8 wValue1 = pInformation->USBwValue1;
-    CopyRoutine=Vender_Handle_CH341;
-    vender_request=Request_No;
-    printf("%d",Request_No);
-  }
-  
   if (CopyRoutine)
   {
     pInformation->Ctrl_Info.Usb_wOffset = wOffset;
@@ -922,12 +872,10 @@ u8 Setup0_Process(void)
   if (pInformation->USBwLength == 0)
   {
     /* Setup with no data stage */
-    printf("NoData_Setup0\r\n");
     NoData_Setup0();
   }
   else
   {
-      printf("Data_Setup0\r\n");
     /* Setup with data stage */
     Data_Setup0();
   }
