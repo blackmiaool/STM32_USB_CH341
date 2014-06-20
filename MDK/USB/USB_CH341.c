@@ -40,11 +40,10 @@ void USB_send(u8 *buf,u8 lenth)
   SetEPTxCount(ENDP2, lenth);
   SetEPTxValid(ENDP2);
   while(GetEPTxStatus(2)!=32);
-  //delay_us(400);
 }
 void USB_receive(const u8 *buf,u8 lenth)
 {
-  //add your own code 
+  //add your own code and remove this 
   USB_send((u8 *)buf,lenth);
 }
 
