@@ -37,13 +37,24 @@ u32 count_in = 0;
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-void EP3_OUT_Callback(void)
+//void EP3_OUT_Callback(void)
+//{
+////  count_out = GetEPRxCount(ENDP3);
+////  PMAToUserBufferCopy(buffer_out, ENDP3_RXADDR, count_out);
+////  SetEPRxValid(ENDP3);
+//}
+void EP2_IN_Callback(void)
 {
-//  count_out = GetEPRxCount(ENDP3);
-//  PMAToUserBufferCopy(buffer_out, ENDP3_RXADDR, count_out);
-//  SetEPRxValid(ENDP3);
+    count_in = 0;
+    putchar('d');
 }
-
+void EP2_OUT_Callback(void)
+{
+    count_out = GetEPRxCount(ENDP2);
+    PMAToUserBufferCopy(buffer_out, ENDP2_RXADDR, count_out);
+    SetEPRxValid(ENDP2);
+    printf(" %c\r\n",buffer_out[0]);
+}
 /*******************************************************************************
 * Function Name  : EP1_IN_Callback
 * Description    :

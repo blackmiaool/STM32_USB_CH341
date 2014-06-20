@@ -260,23 +260,24 @@ void Virtual_Com_Port_Reset(void)
   SetEPRxValid(ENDP0);
 
   /* Initialize Endpoint 1 */
-  SetEPType(ENDP1, EP_BULK);
-  SetEPTxAddr(ENDP2, ENDP2_TXADDR);
+  SetEPType(ENDP1, EP_INTERRUPT);
+  SetEPTxAddr(ENDP1, ENDP1_TXADDR);
   SetEPTxStatus(ENDP1, EP_TX_NAK);
   SetEPRxStatus(ENDP1, EP_RX_DIS);
 
   /* Initialize Endpoint 2 */
-  SetEPType(ENDP2, EP_INTERRUPT);
+  SetEPType(ENDP2, EP_BULK);
   SetEPTxAddr(ENDP2, ENDP2_TXADDR);
-  SetEPRxStatus(ENDP2, EP_RX_DIS);
   SetEPTxStatus(ENDP2, EP_TX_NAK);
+  SetEPRxStatus(ENDP2, EP_RX_DIS);
+  
 
-  /* Initialize Endpoint 3 */
-//  SetEPType(ENDP3, EP_BULK);
-//  SetEPRxAddr(ENDP3, ENDP3_RXADDR);
-//  SetEPRxCount(ENDP3, VIRTUAL_COM_PORT_DATA_SIZE);
-//  SetEPRxStatus(ENDP3, EP_RX_VALID);
-//  SetEPTxStatus(ENDP3, EP_TX_DIS);
+  /* Initialize Endpoint 2 */
+  SetEPType(ENDP2, EP_BULK);
+  SetEPRxAddr(ENDP2, ENDP2_RXADDR);
+  SetEPRxCount(ENDP2, VIRTUAL_COM_PORT_DATA_SIZE);
+//  SetEPRxStatus(ENDP2, EP_RX_VALID);
+//  SetEPTxStatus(ENDP2, EP_TX_DIS);
 
   /* Set this device to response on default address */
   SetDeviceAddress(0);
@@ -468,16 +469,16 @@ RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
             baud_factor|=(wIndex&0xff00);
             divisor=wIndex&0x03;
             ch341_baud=1532620800L/(((~baud_factor)&0xffff)<<((3-divisor)*3));
-            printf("      baud=%d\r\n",ch341_baud);
+        //    printf("      baud=%d\r\n",ch341_baud);
             break; 
         case 0x0f2c:
             baud_factor&=0xff00;
             baud_factor|=wIndex;
             ch341_baud=1532620800L/(((~baud_factor)&0xffff)<<((3-divisor)*3));
-            printf("      baud=%d\r\n",ch341_baud);
+       //     printf("      baud=%d\r\n",ch341_baud);
             break;
         }  
-        mprintf("write_reg:%h=%h\r\n",wValue,wIndex);
+        //mprintf("write_reg:%h=%h\r\n",wValue,wIndex);
         break; 
     case 0xA4: 
         ch341_state=0xee9f;

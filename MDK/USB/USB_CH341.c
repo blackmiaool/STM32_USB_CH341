@@ -28,8 +28,8 @@ void USB_LP_CAN_RX0_IRQHandler(void)
 void USART_To_USB_Send_Data(void)
 {
   UserToPMABufferCopy(buffer_in, ENDP2_TXADDR, count_in);
-  SetEPTxCount(ENDP1, count_in);
-  SetEPTxValid(ENDP1);
+  SetEPTxCount(ENDP2, count_in);
+  SetEPTxValid(ENDP2);
 }
 void USB_Cable_Config(FunctionalState NewState)
 {
