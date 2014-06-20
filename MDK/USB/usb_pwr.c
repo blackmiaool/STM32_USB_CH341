@@ -19,7 +19,9 @@
 #include "usb_conf.h"
 #include "usb_pwr.h"
 #include "hw_config.h"
-
+#include "usb_ch341.h"
+#include "usb_init.h"
+#include "usb_prop.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/

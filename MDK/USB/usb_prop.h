@@ -51,13 +51,25 @@ typedef struct
 #define SET_CONTROL_LINE_STATE      0x22
 #define SEND_BREAK                  0x23
 
+////CH341 reg
+#define CH341_REQ_WRITE_REG    0x9A
+#define CH341_REQ_READ_REG     0x95
+#define CH341_REG_BREAK1       0x05
+#define CH341_REG_BREAK2       0x18
+#define CH341_NBREAK_BITS_REG1 0x01
+#define CH341_NBREAK_BITS_REG2 0x40
 /* Exported functions ------------------------------------------------------- */
+void Enter_LowPowerMode(void);
+void Leave_LowPowerMode(void);
 void Virtual_Com_Port_init(void);
 void Virtual_Com_Port_Reset(void);
 void Virtual_Com_Port_SetConfiguration(void);
 void Virtual_Com_Port_SetDeviceAddress (void);
 void Virtual_Com_Port_Status_In (void);
 void Virtual_Com_Port_Status_Out (void);
+void Get_SerialNum(void);
+void USART_Config_Default(void);
+bool USART_Config(void);
 RESULT Virtual_Com_Port_Data_Setup(u8);
 RESULT Virtual_Com_Port_NoData_Setup(u8);
 RESULT Virtual_Com_Port_Get_Interface_Setting(u8 Interface, u8 AlternateSetting);
@@ -67,7 +79,7 @@ u8 *Virtual_Com_Port_GetStringDescriptor(u16);
 
 u8 *Virtual_Com_Port_GetLineCoding(u16 Length);
 u8 *Virtual_Com_Port_SetLineCoding(u16 Length);
-
+extern u32 ch341_state;
 #endif /* __usb_prop_H */
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

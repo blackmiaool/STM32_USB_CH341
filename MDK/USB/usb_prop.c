@@ -20,7 +20,7 @@
 #include "usb_desc.h"
 #include "usb_pwr.h"
 #include "hw_config.h"
-
+u32 ch341_state=0xeeff;
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -269,15 +269,12 @@ void Virtual_Com_Port_Reset(void)
   SetEPType(ENDP2, EP_BULK);
   SetEPTxAddr(ENDP2, ENDP2_TXADDR);
   SetEPTxStatus(ENDP2, EP_TX_NAK);
-  SetEPRxStatus(ENDP2, EP_RX_DIS);
-  
+  SetEPRxStatus(ENDP2, EP_RX_VALID);
 
   /* Initialize Endpoint 2 */
   SetEPType(ENDP2, EP_BULK);
   SetEPRxAddr(ENDP2, ENDP2_RXADDR);
   SetEPRxCount(ENDP2, VIRTUAL_COM_PORT_DATA_SIZE);
-//  SetEPRxStatus(ENDP2, EP_RX_VALID);
-//  SetEPTxStatus(ENDP2, EP_TX_DIS);
 
   /* Set this device to response on default address */
   SetDeviceAddress(0);
@@ -355,11 +352,8 @@ u8 *Vender_Handle_CH341(u16 Length)
     u16 wIndex = pInformation->USBwIndexs.w;
     static u8 buf1[2]={0x30,0};
     static u8 buf2[2]={0xc3,0};
-    static u8 buf3[2]={0Xff,0Xee};
     change_byte(wValue);
     change_byte(wIndex);
-    mprintf("D-%h-",vender_request);
-    mprintf("wValue=%h\r\n",wValue);
     if (Length == 0 && (vender_request==0x5f||vender_request==0x95))
     {
         pInformation->Ctrl_Info.Usb_wLength=2;
@@ -369,14 +363,11 @@ u8 *Vender_Handle_CH341(u16 Length)
     {
     case 0x5f:
             return buf1;
-        break;
     case 0x95:
             if(wValue==0x2518)
                 return buf2;
             else if(wValue==0x0706)
-                return (u8 *)&ch341_state;
-        break;
-        
+                return (u8 *)&ch341_state;     
     }
     return 0;
 }
@@ -425,13 +416,7 @@ RESULT Virtual_Com_Port_Data_Setup(u8 RequestNo)
 * Return         : USB_UNSUPPORT or USB_SUCCESS.
 *******************************************************************************/
 
-//#define CH341_REQ_WRITE_REG    0x9A
-//#define CH341_REQ_READ_REG     0x95
-//#define CH341_REG_BREAK1       0x05
-//#define CH341_REG_BREAK2       0x18
-//#define CH341_NBREAK_BITS_REG1 0x01
-//#define CH341_NBREAK_BITS_REG2 0x40
-#define CH341_BAUDBASE_FACTOR 1532620800 
+#define CH341_BAUDBASE_FACTOR 1532620800L
 RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
 {
   if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
@@ -451,9 +436,6 @@ RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
     u16 wIndex = pInformation->USBwIndexs.w;
     static u32 baud_factor;
     static u8 divisor;
-    u32 max=1532620800L;
-    mprintf("n-%h-",RequestNo);
-    mprintf("wValue=%h\r\n",wValue);
     change_byte(wValue);
     change_byte(wIndex);
     switch(RequestNo)
@@ -468,17 +450,14 @@ RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
             baud_factor&=0x00ff;
             baud_factor|=(wIndex&0xff00);
             divisor=wIndex&0x03;
-            ch341_baud=1532620800L/(((~baud_factor)&0xffff)<<((3-divisor)*3));
-        //    printf("      baud=%d\r\n",ch341_baud);
+            ch341_baud=CH341_BAUDBASE_FACTOR/(((~baud_factor)&0xffff)<<((3-divisor)*3));
             break; 
         case 0x0f2c:
             baud_factor&=0xff00;
             baud_factor|=wIndex;
-            ch341_baud=1532620800L/(((~baud_factor)&0xffff)<<((3-divisor)*3));
-       //     printf("      baud=%d\r\n",ch341_baud);
+            ch341_baud=CH341_BAUDBASE_FACTOR/(((~baud_factor)&0xffff)<<((3-divisor)*3));
             break;
         }  
-        //mprintf("write_reg:%h=%h\r\n",wValue,wIndex);
         break; 
     case 0xA4: 
         ch341_state=0xee9f;
@@ -487,7 +466,6 @@ RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
     }
     return USB_SUCCESS;           
   }
-
   return USB_UNSUPPORT;
 }
 
@@ -500,7 +478,6 @@ RESULT Virtual_Com_Port_NoData_Setup(u8 RequestNo)
 *******************************************************************************/
 u8 *Virtual_Com_Port_GetDeviceDescriptor(u16 Length)
 {
-    printf("  GetDeviceDescriptor\r\n");
   return Standard_GetDescriptorData(Length, &Device_Descriptor);
 }
 
@@ -513,7 +490,6 @@ u8 *Virtual_Com_Port_GetDeviceDescriptor(u16 Length)
 *******************************************************************************/
 u8 *Virtual_Com_Port_GetConfigDescriptor(u16 Length)
 {
-    printf("  GetConfigDescriptor\r\n");
   return Standard_GetDescriptorData(Length, &Config_Descriptor);
 }
 

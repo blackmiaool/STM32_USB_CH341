@@ -19,14 +19,12 @@
 #include "usb_mem.h"
 #include "hw_config.h"
 #include "usb_istr.h"
-
+#include "usb_ch341.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 u8 buffer_out[VIRTUAL_COM_PORT_DATA_SIZE];
-u32 count_out = 0;
-u32 count_in = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -37,23 +35,18 @@ u32 count_in = 0;
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-//void EP3_OUT_Callback(void)
-//{
-////  count_out = GetEPRxCount(ENDP3);
-////  PMAToUserBufferCopy(buffer_out, ENDP3_RXADDR, count_out);
-////  SetEPRxValid(ENDP3);
-//}
 void EP2_IN_Callback(void)
 {
-    count_in = 0;
-    putchar('d');
+
 }
 void EP2_OUT_Callback(void)
 {
+    u8 count_out;
     count_out = GetEPRxCount(ENDP2);
     PMAToUserBufferCopy(buffer_out, ENDP2_RXADDR, count_out);
+    USB_receive(buffer_out,count_out);
     SetEPRxValid(ENDP2);
-    printf(" %c\r\n",buffer_out[0]);
+    
 }
 /*******************************************************************************
 * Function Name  : EP1_IN_Callback
@@ -64,7 +57,7 @@ void EP2_OUT_Callback(void)
 *******************************************************************************/
 void EP1_IN_Callback(void)
 {
-  count_in = 0;
+
 }
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

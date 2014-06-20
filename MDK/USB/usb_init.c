@@ -64,5 +64,36 @@ void USB_Init(void)
 	/* Initialize devices one by one */
 	pProperty->Init();
 }
+void Set_USBClock(void)
+{
+  /* USBCLK = PLLCLK / 1.5 */
+  RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_1Div5);
+  /* Enable USB clock */
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
+}
+void USB_Interrupts_Config(void)
+{
+  NVIC_InitTypeDef NVIC_InitStructure;
 
+#ifdef  VECT_TAB_RAM
+  /* Set the Vector Table base location at 0x20000000 */
+  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
+#else  /* VECT_TAB_FLASH */
+  /* Set the Vector Table base location at 0x08000000 */
+  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
+#endif
+
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+
+  NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN_RX0_IRQChannel;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+
+  /* Enable USART1 Interrupt */
+  NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQChannel;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  NVIC_Init(&NVIC_InitStructure);
+}
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

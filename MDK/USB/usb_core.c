@@ -81,7 +81,6 @@ RESULT Standard_SetConfiguration(void)
       && (pInformation->USBwIndex == 0)) /*call Back usb spec 2.0*/
   {
     pInformation->Current_Configuration = pInformation->USBwValue0;
-     printf("setConfiguration%d\r\n",pInformation->Current_Configuration);
     pUser_Standard_Requests->User_SetConfiguration();
     return USB_SUCCESS;
   }
@@ -940,7 +939,6 @@ u8 Out0_Process(void)
   }
   else if (ControlState == WAIT_STATUS_OUT)
   {
-      printf("        out0\r\n");
     (*pProperty->Process_Status_OUT)();
     ControlState = STALLED;
   }

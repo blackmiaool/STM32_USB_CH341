@@ -23,7 +23,8 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void USB_Init(void);
-
+void Set_USBClock(void);
+void USB_Interrupts_Config(void);
 /* External variables --------------------------------------------------------*/
 /*  The number of current endpoint, it will be used to specify an endpoint */
 extern u8	EPindex;

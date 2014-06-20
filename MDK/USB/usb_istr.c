@@ -54,13 +54,13 @@ void (*pEpInt_OUT[7])(void) =
 
 
 /*******************************************************************************
-* Function Name  : USB_Istr.
+* Function Name  : USB_LP_CAN_RX0_IRQHandler.
 * Description    : ISTR events interrupt service routine.
 * Input          : None.
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-void USB_Istr(void)
+void USB_LP_CAN_RX0_IRQHandler(void)
 {
 
   wIstr = _GetISTR();

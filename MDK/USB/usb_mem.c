@@ -38,17 +38,6 @@ void UserToPMABufferCopy(u8 *pbUsrBuf, u16 wPMABufAddr, u16 wNBytes)
   u32 i, temp1, temp2;
   u16 *pdwVal;
   pdwVal = (u16 *)(wPMABufAddr * 2 + PMAAddr);
-    
-    {
-        int i=0;
-        printf("***buffer_out***");
-        for(i=0;i<wNBytes;i++)
-        {
-        mprintf("%h",pbUsrBuf[i]);
-        }
-        printf("***end***\r\n");
-
-    }
   for (i = n; i != 0; i--)
   {
     temp1 = (u16) * pbUsrBuf;
