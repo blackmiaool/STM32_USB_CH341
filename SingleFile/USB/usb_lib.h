@@ -57,7 +57,7 @@ typedef enum { DISABLE = 0, ENABLE  = !DISABLE} FunctionalState;
 
 typedef enum { ERROR = 0, SUCCESS  = !ERROR} ErrorStatus;
 #endif
-
+#define change_byte(a) do{u8 lb=a;a=(lb<<8)+(a>>8);}while(0)
 typedef enum _CONTROL_STATE
 {
   WAIT_SETUP,       /* 0 */
@@ -326,8 +326,8 @@ void Virtual_Com_Port_SetDeviceAddress (void);
 void Virtual_Com_Port_Status_In (void);
 void Virtual_Com_Port_Status_Out (void);
 void Get_SerialNum(void);
-void USART_Config_Default(void);
-bool USART_Config(void);
+//void USART_Config_Default(void);
+//bool USART_Config(void);
 RESULT Virtual_Com_Port_Data_Setup(u8);
 RESULT Virtual_Com_Port_NoData_Setup(u8);
 RESULT Virtual_Com_Port_Get_Interface_Setting(u8 Interface, u8 AlternateSetting);
@@ -999,7 +999,7 @@ EP_DBUF_DIR GetEPDblBufDir(u8 /*bEpNum*/);
 void FreeUserBuffer(u8 bEpNum/*bEpNum*/, u8 bDir);
 u16 ToWord(u8, u8);
 u16 ByteSwap(u16);
-#include "stm32f10x_type.h"
+
 /*-------------------------------------------------------------*/
 /* EP_NUM */
 /* defines how many endpoints are used by the device */

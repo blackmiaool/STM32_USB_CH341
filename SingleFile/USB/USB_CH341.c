@@ -1,8 +1,10 @@
-#include "stm32f10x_it.h"
+#include "stm32f10x_gpio.h"
+#include "stm32f10x_rcc.h"
+#include "stm32f10x_nvic.h"
 #include "usb_lib.h"
 #include "usb_ch341.h"
-#include "delay.h"
-USART_InitTypeDef USART_InitStructure;
+void delay_ms(u16 nms);
+void delay_us(u32 nus);
 u16 ch341_baud;
 
 void USB_CH341_Init()
@@ -28,7 +30,7 @@ void USB_Cable_Config(FunctionalState NewState)
 
 void USB_send(u8 *buf,u8 lenth)
 {
-    if(lenth>32)
+    if(lenth>32)//max package size=32
     {
         lenth-=32;
         USB_send(buf,lenth);
@@ -39,14 +41,37 @@ void USB_send(u8 *buf,u8 lenth)
     UserToPMABufferCopy(buf, ENDP2_TXADDR, lenth);
     SetEPTxCount(ENDP2, lenth);
     SetEPTxValid(ENDP2);
-    while(GetEPTxStatus(2)!=32);
+    while(GetEPTxStatus(2)!=32);//wait for send finished
 }
 void USB_receive(const u8 *buf,u8 lenth)
 {
   //add your own code and remove this 
   USB_send((u8 *)buf,lenth);
 }
+/* Extern variables ----------------------------------------------------------*/
+/* Private function prototypes -----------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 
+//初始化USB
+
+void USB_Init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIO_DISCONNECT, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_Init(USB_DISCONNECT, &GPIO_InitStructure);
+    
+
+	pInformation = &Device_Info;
+	pInformation->ControlState = 2;
+	pProperty = &Device_Property;
+	pUser_Standard_Requests = &User_Standard_Requests;
+	/* Initialize devices one by one */
+	pProperty->Init();
+}
 /*******************************************************************************
 * Function Name  : SetCNTR.
 * Description    : Set the CNTR register value.
@@ -1054,10 +1079,10 @@ void Get_SerialNum(void)
     Virtual_Com_Port_StringSerial[24] = (u8)((Device_Serial2 & 0xFF000000) >> 24);
   }
 }
-void USART_Config_Default(void)
-{
+//void USART_Config_Default(void)
+//{
 
-}
+//}
 
 LINE_CODING linecoding =
   {
@@ -1066,56 +1091,56 @@ LINE_CODING linecoding =
     0x00,   /* parity - none*/
     0x08    /* no. of bits 8*/
   };
-bool USART_Config(void)
-{
+//bool USART_Config(void)
+//{
 
-  /* set the Stop bit*/
-  switch (linecoding.format)
-  {
-    case 0:
-      break;
-    case 1:
-      break;
-    case 2:
-      break;
-    default :
-    {
-      USART_Config_Default();
-      return (FALSE);
-    }
-  }
+//  /* set the Stop bit*/
+//  switch (linecoding.format)
+//  {
+//    case 0:
+//      break;
+//    case 1:
+//      break;
+//    case 2:
+//      break;
+//    default :
+//    {
+//      USART_Config_Default();
+//      return (FALSE);
+//    }
+//  }
 
-  /* set the parity bit*/
-  switch (linecoding.paritytype)
-  {
-    case 0:
-      break;
-    case 1:
-      break;
-    case 2:
-      break;
-    default :
-    {
-      USART_Config_Default();
-      return (FALSE);
-    }
-  }
+//  /* set the parity bit*/
+//  switch (linecoding.paritytype)
+//  {
+//    case 0:
+//      break;
+//    case 1:
+//      break;
+//    case 2:
+//      break;
+//    default :
+//    {
+//      USART_Config_Default();
+//      return (FALSE);
+//    }
+//  }
 
-  /*set the data type : only 8bits and 9bits is supported */
-  switch (linecoding.datatype)
-  {
-    case 0x07:
-      break;
-    case 0x08:
-      break;
-    default :
-    {
-      USART_Config_Default();
-      return (FALSE);
-    }
-  }
-  return (TRUE);
-}
+//  /*set the data type : only 8bits and 9bits is supported */
+//  switch (linecoding.datatype)
+//  {
+//    case 0x07:
+//      break;
+//    case 0x08:
+//      break;
+//    default :
+//    {
+//      USART_Config_Default();
+//      return (FALSE);
+//    }
+//  }
+//  return (TRUE);
+//}
 
 
 
@@ -1209,7 +1234,7 @@ void Virtual_Com_Port_init(void)
   _SetCNTR(wInterrupt_Mask);
 
   /* configure the USART 1 to the default settings */
-  USART_Config_Default();
+  //USART_Config_Default();
 
   bDeviceState = UNCONNECTED;
 }
@@ -1305,7 +1330,7 @@ void Virtual_Com_Port_Status_In(void)
 {
   if (Request == SET_LINE_CODING)
   {
-    USART_Config();
+    //USART_Config();
     Request = 0;
   }
 }
@@ -2021,30 +2046,7 @@ u16  wInterrupt_Mask;
 DEVICE_INFO	Device_Info;
 USER_STANDARD_REQUESTS  *pUser_Standard_Requests;
 
-/* Extern variables ----------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
 
-//初始化USB
-
-void USB_Init(void)
-{
-    GPIO_InitTypeDef GPIO_InitStructure;
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIO_DISCONNECT, ENABLE);
-
-    GPIO_InitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_Init(USB_DISCONNECT, &GPIO_InitStructure);
-    
-
-	pInformation = &Device_Info;
-	pInformation->ControlState = 2;
-	pProperty = &Device_Property;
-	pUser_Standard_Requests = &User_Standard_Requests;
-	/* Initialize devices one by one */
-	pProperty->Init();
-}
 void Set_USBClock(void)
 {
   /* USBCLK = PLLCLK / 1.5 */
