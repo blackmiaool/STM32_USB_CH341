@@ -28,25 +28,24 @@ void USB_Cable_Config(FunctionalState NewState)
 
 void USB_send(u8 *buf,u8 lenth)
 {
-  UserToPMABufferCopy(buf, ENDP2_TXADDR, lenth);
-  SetEPTxCount(ENDP2, lenth);
-  SetEPTxValid(ENDP2);
-  while(GetEPTxStatus(2)!=32);
+    if(lenth>32)
+    {
+        lenth-=32;
+        USB_send(buf,lenth);
+        buf+=lenth;
+        lenth=32;
+    }
+        
+    UserToPMABufferCopy(buf, ENDP2_TXADDR, lenth);
+    SetEPTxCount(ENDP2, lenth);
+    SetEPTxValid(ENDP2);
+    while(GetEPTxStatus(2)!=32);
 }
 void USB_receive(const u8 *buf,u8 lenth)
 {
   //add your own code and remove this 
   USB_send((u8 *)buf,lenth);
 }
-#include "usb_lib.h"
-
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Extern variables ----------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
 
 /*******************************************************************************
 * Function Name  : SetCNTR.
@@ -785,9 +784,6 @@ u16 ByteSwap(u16 wSwW)
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f10x_lib.h"
-#include "usb_lib.h"
-#include "usb_ch341.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -1006,7 +1002,7 @@ void Resume(RESUME_STATE eResumeSetVal)
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_lib.h"
+
 u32 ch341_state=0xeeff;
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -1575,7 +1571,7 @@ u8 *Virtual_Com_Port_SetLineCoding(u16 Length)
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_lib.h"
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -1649,8 +1645,6 @@ void PMAToUserBufferCopy(u8 *pbUsrBuf, u16 wPMABufAddr, u16 wNBytes)
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
-/* Includes ------------------------------------------------------------------*/
-#include "usb_lib.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -1816,8 +1810,6 @@ void USB_LP_CAN_RX0_IRQHandler(void)
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
-/* Includes ------------------------------------------------------------------*/
-#include "usb_lib.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -2006,10 +1998,6 @@ void CTR_HP(void)
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
-/* Includes ------------------------------------------------------------------*/
-#include "usb_lib.h"
-
-#include "usb_ch341.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -2105,9 +2093,6 @@ void USB_Interrupts_Config(void)
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
-/* Includes ------------------------------------------------------------------*/
-#include "usb_lib.h"
-#include "usb_ch341.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -2165,8 +2150,6 @@ void EP1_IN_Callback(void)
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
-/* Includes ------------------------------------------------------------------*/
-#include "usb_lib.h"
 /* USB Standard Device Descriptor */
 const u8 Virtual_Com_Port_DeviceDescriptor[] =
   {
@@ -2294,8 +2277,6 @@ u8 Virtual_Com_Port_StringSerial[VIRTUAL_COM_PORT_SIZ_STRING_SERIAL] =
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
-/* Includes ------------------------------------------------------------------*/
-#include "usb_lib.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define ValBit(VAR,Place)    (VAR & (1 << Place))
