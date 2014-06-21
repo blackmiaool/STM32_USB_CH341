@@ -441,61 +441,8 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>HARDWARE</GroupName>
-        </Group>
-        <Group>
           <GroupName>USB</GroupName>
           <Files>
-            <File>
-              <FileName>usb_core.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_core.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_desc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_desc.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_endp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_endp.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_int.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_int.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_istr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_istr.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_mem.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_mem.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_prop.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_prop.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_pwr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_pwr.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_regs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USB\usb_regs.c</FilePath>
-            </File>
             <File>
               <FileName>USB_CH341.c</FileName>
               <FileType>1</FileType>
