@@ -1,8 +1,6 @@
-#include "stm32f10x_gpio.h"
-#include "stm32f10x_rcc.h"
-#include "stm32f10x_nvic.h"
-#include "usb_lib.h"
 #include "usb_ch341.h"
+#include "usb_lib.h"
+
 void delay_ms(u16 nms);
 void delay_us(u32 nus);
 u16 ch341_baud;
