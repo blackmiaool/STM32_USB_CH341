@@ -6,6 +6,6 @@ Why simulate CH341?
 * ST's USB virtual com port demo's driver no included in Linux.
 * ST's USB virtual com port demo's driver have no signature(difficult to install).
 * I feel bored.            
-Diagram:
+Diagram
 ===============
 ![hello world](https://raw.githubusercontent.com/blackmiaool/STM32_USB_CH341/master/diagram.jpg)
