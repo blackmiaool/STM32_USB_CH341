@@ -261,7 +261,7 @@ void Virtual_Com_Port_Reset(void)
 
   /* Initialize Endpoint 1 */
   SetEPType(ENDP1, EP_INTERRUPT);
-  SetEPTxAddr(ENDP1, ENDP1_TXADDR);
+  SetEPTxAddr(ENDP1, ENDP1_RXADDR);
   SetEPTxStatus(ENDP1, EP_TX_NAK);
   SetEPRxStatus(ENDP1, EP_RX_DIS);
 

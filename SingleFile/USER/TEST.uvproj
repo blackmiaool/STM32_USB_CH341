@@ -436,7 +436,7 @@
             <File>
               <FileName>STM32F10xR.LIB</FileName>
               <FileType>4</FileType>
-              <FilePath>..\SYSTEM\STM32F10xR.LIB</FilePath>
+              <FilePath>..\stm32f10xlib\STM32F10xR.LIB</FilePath>
             </File>
           </Files>
         </Group>
