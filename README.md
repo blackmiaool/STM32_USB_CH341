@@ -11,4 +11,5 @@ Diagram
 ===============
 ![hello world](https://raw.githubusercontent.com/blackmiaool/STM32_USB_CH341/master/diagram.jpg)
 
-It's not very diffcult to develop. I just refer to linux open source driver of ch341.
+It's not very diffcult to develop. I just refer to linux usb-host open source driver of ch341.
+所以你可以去linux里面翻出来这个驱动自己实现一下。
